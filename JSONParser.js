@@ -64,11 +64,11 @@ const objectParser = input => {
   let value;
   while (!input.startsWith("}")) {
     input = spaceParser(input);
-    let str = stringParser(input);
-    if (!str) return null;
-    let key = str[0];
+    let keyString = stringParser(input);
+    if (!keyString) return null;
+    let key = keyString[0];
     parsedObject[key];
-    input = spaceParser(str[1]);
+    input = spaceParser(keyString[1]);
     if (input[0] === ":") {
       input = spaceParser(input.slice(1));
       value = valueParser(input);
@@ -85,7 +85,7 @@ const objectParser = input => {
 }
 
 function valueParser(input) {
-  input = spaceParser(input)
+  input = spaceParser(input);
   return (
     nullParser(input) || 
     booleanParser(input) || 
@@ -113,10 +113,9 @@ const fs = require('fs')
 fs.readdir('./testJSONfiles', (err, files) => {
   if (err) console.log(err)
   else {
-    files.forEach(file => { if (file == "pass4.json") {
+    files.forEach(file => { 
       const data = fs.readFileSync(`./testJSONfiles/${file}`, 'utf-8')
       console.log(file, jsonParser(data) || 'Invalid JSON');
-    }
     })
   }
 })
