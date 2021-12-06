@@ -18,7 +18,7 @@ const booleanParser = input => {
 }
 
 const numberParser = input => {
-	const number = input.match(/^\s*^-?((0\.[0-9]+)|([1-9][0-9]*(\.[0-9]+)?)|0)([eE][-+]?[0-9]+)?\s*/);
+	const number = input.match(/^-?((0\.[0-9]+)|([1-9][0-9]*(\.[0-9]+)?)|0[,}\]])([eE][-+]?[0-9]+)?/);
 	if (number) {
 		return [ Number(number[0]), input.slice(number[0].length) ];
 	}
@@ -33,7 +33,7 @@ const stringParser = input => {
 }
 
 const spaceParser = input => {
-  withoutSpace = input.replace(/^\s+|\s+$/, "");
+  const withoutSpace = input.replace(/^\s+|\s+$/, "");
   return withoutSpace;
 }
   
@@ -49,11 +49,12 @@ const arrayParser = input => {
     input = spaceParser(value[1]);
     if (input[0] === ',') {
       input = spaceParser(input.slice(1));
-       if (input[0]==="]") {
-        return null;
-      }
+      continue;
+    }
+      //  if (input[0]==="]") {
+      //   return null;
+      // } 
 	  }
-  }
   return [ parsedArray, input.slice(1) ];
 }
 
@@ -67,10 +68,10 @@ const objectParser = input => {
     let keyString = stringParser(input);
     if (!keyString) return null;
     let key = keyString[0];
-    parsedObject[key];
+    // parsedObject[key];
     input = spaceParser(keyString[1]);
     if (input[0] === ":") {
-      input = spaceParser(input.slice(1));
+      input = input.slice(1);
       value = valueParser(input);
     }
     if (!value) return null;
@@ -116,6 +117,7 @@ fs.readdir('./testJSONfiles', (err, files) => {
     files.forEach(file => { 
       const data = fs.readFileSync(`./testJSONfiles/${file}`, 'utf-8')
       console.log(file, jsonParser(data) || 'Invalid JSON');
+    
     })
   }
 })
