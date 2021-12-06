@@ -49,12 +49,12 @@ const arrayParser = input => {
     input = spaceParser(value[1]);
     if (input[0] === ',') {
       input = spaceParser(input.slice(1));
+       if (input[0]==="]") {
+        return null;
+      }
       continue;
     }
-      //  if (input[0]==="]") {
-      //   return null;
-      // } 
-	  }
+	}
   return [ parsedArray, input.slice(1) ];
 }
 
